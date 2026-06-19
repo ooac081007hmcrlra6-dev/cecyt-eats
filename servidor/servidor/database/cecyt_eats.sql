@@ -44,7 +44,7 @@ CREATE TABLE `detalle_pedidos` (
 CREATE TABLE `pedidos` (
   `id_pedido` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `fecha_hora` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_hora` datetime NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `estado_pedido` enum('Pendiente','Preparando','Listo para\r\nentrega','Entregado') NOT NULL DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
