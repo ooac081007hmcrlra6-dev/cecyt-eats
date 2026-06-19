@@ -1,0 +1,156 @@
+.barra-navegacion{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background-color:#fff;
+  box-shadow:0 2px 5px rgb(2, 77, 27);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.texto-logo{
+  font-size:24px;
+  font-weight:bold;
+  color:#03551b;
+}
+
+.resalte-logo{
+  color:#ffffff;
+}
+
+.botones-navegacion button{
+  margin-left:15px;
+  padding:8px 18px;
+  border-radius:5px;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  transition:0.2s;
+}
+
+.btn-entrar{
+  background:transparent;
+  color:#0c6b0f;
+  border:2px solid #056819;
+}
+
+.btn-entrar:hover{
+  background:#f0f5fa;
+}
+
+.btn-registrarme{
+  background:#046d20;
+  color:white;
+}
+
+.btn-registrarme:hover{
+  background:#08660b;
+}
+
+.seccion-hero{
+  background-image:url('C:\Users\Amaury-Orozco\Desktop\Equipo\cecy-eats\src\assets\comi.img.jpg');
+  background-size:cover;
+  background-position:center;
+  height:70vh;
+}
+
+.capa-oscura{
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.contenido-hero{
+  color:rgb(255, 255, 255);
+  padding:35px;
+}
+
+.contenido-hero h1{
+   color:rgb(0, 0, 0);
+  font-size:55px;
+  margin-bottom:20px;
+}
+
+.contenido-hero p{
+  font-size:18px;
+  margin-bottom:30px;
+}
+
+.btn-ver-menu{
+  background:#13f402;
+  color:#000000;
+  padding:12px 30px;
+  font-size:18px;
+  font-weight:bold;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn-ver-menu:hover{
+  transform:scale(1.05);
+}
+
+.seccion-informativa{
+  padding:60px 20px;
+  text-align:center;
+  background:white;
+}
+
+.seccion-informativa h2{
+  color:#088130;
+  margin-bottom:40px;
+}
+
+.cuadricula-info{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+}
+
+.tarjeta-info{
+  width:250px;
+  padding:30px;
+  background:#f8f9fa;
+  border-radius:8px;
+  box-shadow:0 2px 4px rgba(1, 93, 15, 0.91);
+}
+
+.icono-info{
+  font-size:40px;
+  color:#088130;
+
+  margin-bottom:15px;
+}
+
+.pie-pagina{
+  background:#05521d;
+  color:#baccdb;
+  padding:25px 20px;
+}
+
+.contenido-pie{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1000px;
+  margin:auto;
+  flex-wrap:wrap;
+}
+
+.enlaces-pie a{
+  color:white;
+  text-decoration:none;
+  margin-left:20px;
+}
+
+.enlaces-pie a:hover{
+  text-decoration:underline;
+}

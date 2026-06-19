@@ -1,0 +1,184 @@
+
+import React, { useState, useEffect } from 'react';
+import PaginaInicial from './componentes/paginainicio/PaginaInicial';
+import InicioSesion from './componentes/Autenticacion/InicioSesion';
+import Catalogo from './componentes/Catalogo/Catalogo';
+import Registro from './componentes/Autenticacion/Registro';
+import Carrito from './componentes/Carrito/Carrito';
+import PanelAdmin from './componentes/PanelAdmin/PanelAdmin';
+import { crearPedido } from './servicios/api';
+
+
+function App() {
+  // Pantallas posibles: 'inicio', 'inicioSesion', 'registro', 'tablero'
+  const [pantallaActual, setPantallaActual] = useState('inicio');
+  const [usuarioActivo, setUsuarioActivo] = useState(null);
+  const [elementosCarrito, setElementosCarrito] = useState([]);
+  // Al cargar la app, revisar si ya existía una sesión guardada
+
+  useEffect(() => {
+
+    const sesionGuardada = localStorage.getItem('usuarioActivo');
+    if (sesionGuardada) {
+      const usuario = JSON.parse(sesionGuardada);
+      setUsuarioActivo(usuario);
+      // Redirigir según el rol
+      if (usuario.rol === 'administrador') {
+        setPantallaActual('adminPanel');
+      } else {
+        setPantallaActual('catalogo');
+      }
+    }
+  }, []);
+  // ── MANEJO DE SESIÓN ──────────────────────────────────────────────
+  const manejarInicioSesionExitoso = (usuario) => {
+    setUsuarioActivo(usuario);
+    if (usuario.rol === 'administrador') {
+      setPantallaActual('adminPanel');
+    } else {
+      setPantallaActual('catalogo');
+    }
+  };
+  const manejarCierreSesion = () => {
+
+    localStorage.removeItem('usuarioActivo');
+    setUsuarioActivo(null);
+    setElementosCarrito([]);
+    setPantallaActual('inicio');
+  };
+
+
+  // ── MANEJO DEL CARRITO ────────────────────────────────────────────
+  const agregarAlCarrito = (producto) => {
+    setElementosCarrito(prev => {
+      const existente = prev.find(i => i.id_producto ===
+        producto.id_producto);
+      if (existente) {
+        return prev.map(i =>
+          i.id_producto === producto.id_producto
+            ? { ...i, cantidad: i.cantidad + 1 }
+            : i
+        );
+      }
+      return [...prev, { ...producto, cantidad: 1 }];
+    });
+  };
+  const cambiarCantidadCarrito = (id_producto, delta) => {
+    setElementosCarrito(prev =>
+      prev
+        .map(i =>
+          i.id_producto === id_producto
+            ? { ...i, cantidad: i.cantidad + delta }
+            : i
+        )
+        .filter(i => i.cantidad > 0)
+    );
+  };
+  const eliminarDelCarrito = (id_producto) => {
+    setElementosCarrito(prev =>
+      prev.filter(i => i.id_producto !== id_producto)
+    );
+  };
+  // Cantidad total de artículos en el carrito (para el badge del botón)
+  const totalEnCarrito = elementosCarrito.reduce(
+    (acc, i) => acc + i.cantidad, 0
+  );
+  // ── FINALIZAR PEDIDO (guarda en MySQL via API) ────────────────────
+  const finalizarPedido = async () => {
+const subtotal = elementosCarrito.reduce(
+(acc, i) => acc + i.precio * i.cantidad, 0
+);
+const detalles = elementosCarrito.map(item => ({
+id_producto: item.id_producto,
+cantidad: item.cantidad,
+precio_unitario: item.precio,
+}));
+// ELIMINAR: localStorage.setItem('pedidos', ...)
+// ESCRIBIR:
+const respuesta = await crearPedido({
+id_usuario: usuarioActivo.id_usuario,
+
+total: parseFloat(subtotal.toFixed(2)),
+detalles,
+});
+if (respuesta.error) {
+alert('Error al guardar pedido: ' + respuesta.error); return;
+}
+setElementosCarrito([]);
+alert(`✔ Pedido #${respuesta.id_pedido} registrado correctamente.`);
+setPantallaActual('catalogo');
+};
+  // ── ÁRBOL DE PANTALLAS ────────────────────────────────────────────
+  return (
+    <div>
+      {/* Página de Inicio (Landing Page) */}
+      {pantallaActual === 'inicio' && (
+        <PaginaInicial
+          alNavegararInicioSesion={() => setPantallaActual('inicioSesion')}
+          alNavegararRegistro={() => setPantallaActual('registro')}
+        />
+      )}
+      {/* Inicio de Sesión */}
+      {pantallaActual === 'inicioSesion' && (
+        <div style={{ padding: '20px' }}>
+          <button
+            onClick={() => setPantallaActual('inicio')}
+            style={{ margin: '10px', padding: '5px 10px' }}
+          >
+            ← Volver al Inicio
+
+          </button>
+          <InicioSesion
+            alCambiarARegistro={() => setPantallaActual('registro')}
+            alIniciarSesionExitoso={manejarInicioSesionExitoso}
+          />
+        </div>
+      )}
+      {/* Registro */}
+      {pantallaActual === 'registro' && (
+        <div style={{ padding: '20px' }}>
+          <button
+            onClick={() => setPantallaActual('inicio')}
+            style={{ margin: '10px', padding: '5px 10px' }}
+          >
+            ← Volver al Inicio
+          </button>
+          <Registro
+            alCambiarAInicioSesion={() =>
+              setPantallaActual('inicioSesion')}
+          />
+        </div>
+      )}
+      {/* Catálogo — solo alumnos */}
+      {pantallaActual === 'catalogo' && (
+        <Catalogo
+          usuarioActivo={usuarioActivo}
+          alAgregarAlCarrito={agregarAlCarrito}
+          alVerCarrito={() => setPantallaActual('carrito')}
+          totalEnCarrito={totalEnCarrito}
+          alCerrarSesion={manejarCierreSesion}
+        />
+      )}
+      {/* Carrito de compras */}
+      {pantallaActual === 'carrito' && (
+        <Carrito
+          elementos={elementosCarrito}
+          usuarioActivo={usuarioActivo}
+          alCambiarCantidad={cambiarCantidadCarrito}
+          alEliminarElemento={eliminarDelCarrito}
+          alFinalizarPedido={finalizarPedido}
+          alSeguirComprando={() => setPantallaActual('catalogo')}
+        />
+      )}
+      {/* Panel de Administrador — solo administradores */}
+
+      {pantallaActual === 'adminPanel' && (
+        <PanelAdmin
+          usuarioActivo={usuarioActivo}
+          alCerrarSesion={manejarCierreSesion}
+        />
+      )}
+    </div>
+  );
+}
+export default App;
