@@ -26,7 +26,9 @@ router.post('/registro', async (req, res) => {
             id_usuario: result.insertId
         });
     } catch (err) {
+        console.error("Error en registro:", err);
         res.status(500).json({ error: err.message });
+        
     }
 });
 // ── POST /api/usuarios/login ─────────────────────────────────────────
