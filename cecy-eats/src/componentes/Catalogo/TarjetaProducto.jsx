@@ -9,7 +9,7 @@ function TarjetaProducto({ producto, alAgregarAlCarrito }) {
         <div className='tarjeta-producto'>
             {/* Imagen del platillo */}
             <img
-                src={img}
+                src={imagen}
                 alt={nombre_producto}
                 className='imagen-producto'
             />
