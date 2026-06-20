@@ -29,8 +29,7 @@ function Registro({ alCambiarAInicioSesion }) {
     setCargando(true); 
     const respuesta = await registrarUsuario({ nombre, correo, contrasena, 
 rol }); 
-    setCargando(false); 
-  
+    
     if (respuesta.error) { 
       setError(respuesta.error); 
       return; 
