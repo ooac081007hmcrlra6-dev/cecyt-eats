@@ -11,7 +11,7 @@ function Registro({ alCambiarAInicioSesion }) {
   const [rol,        setRol]        = useState('alumno'); 
   const [error,      setError]      = useState(''); 
   const [exito,      setExito]      = useState(''); 
-  const [cargando,   setCargando]   = useState(false); 
+ 
   
   const manejarRegistro = async (e) => { 
     e.preventDefault(); 
