@@ -23,7 +23,7 @@ setError(respuesta.error);
 return;
 }
 // Guardar sesión en localStorage (solo el objeto usuario, sin
-contraseña)
+(contraseña)
 localStorage.setItem('usuarioActivo',
 JSON.stringify(respuesta.usuario));
 alIniciarSesionExitoso(respuesta.usuario);
